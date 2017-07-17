@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			修饰符:i g
+			量词:+
+			转义符:\ \d
+		一.replace:
+			1.string.replace('要被替换的字符串'||正则,'替换成什么'||回调函数);
+			返回值:处理之后的结果;
+			eg:把第一个2换成二
+			str.replace('2','二');
+			或str.replace(/2/g,'二');
+			eg1:过滤敏感词
+			var str='中国共产党总书记习近平说:法轮功是邪教!';
+			str.replace(/中国共产党|习近平|法轮功/g,function($0){
+				var str='';
+				for(var i=0;i<$0.length;i++){
+					str+='*';
+				}
+				return str;
+			});
+			eg2:过滤敏感词
+			<input type='text' id='txt'>
+			<input type="button" value="提交" id="btn"/>
+			<ul id="ul"></ul>
+//			你妹->%$~
+//			我靠->&%$
+			var btn = document.getElementById('btn');
+			var txt = document.getElementById('txt');
+			var ul = document.getElementById('ul');
+			var arr=['你妹','我靠','艹'];
+			var str=arr.join('|');
+			var re =new RegExp(str,'g');
+			btn.onclick=function(){
+				var val=txt.value;
+				var v=val.replace(re,function($0){
+					switch($0){
+						case'你妹':
+							return '%$~';
+						break;
+						case '我靠':
+							return '&%$';
+						break;
+						case '艹':
+							return '&%$~~%~';
+						break;
+					}
+				});
+				var li=document.createElement('li');
+				li.innerHTML=v;
+				ul.appendChild(li);
+				txt.value='';
+			}
+		****简写与不简写正则的区别:简写的正则只能放字符串,不允许放变量,如果放了变量,意思就是去找整个字符串中有没有这个变量名的字符;
+		如果要放变量,那么不能用简写的方式,要用标准方式.
+		var str='sds1ad3213jstr232s1a1';
+		var str2='j';
+		简写:re=/j/,不能写re=/str2/
+		全称:var re=new RegExp(str2,'gi');
+			var re=new RegExp('j','g');
+			var re=new RegExp(/j/,'gi');ES6支持
+			在使用 new RegExp的时候,如果字符串中有转义符,那这个时候需要把转义符用\转义,比如:'\d'->'\\d'
+			var re= new RegExp('\\d+','gi');
+		2.replace
+			当第二个参数私用了回调函数之后:默认参数的意义
+			函数的第一个参数:本次匹配到的字符串
+			函数的第二个参数:本次匹配到的字符串的下标
+			函数的第三个参数:整个字符串
+			第三个参数之后:undefined
+		3.子项:
+			只要在正则中有了()，那么回调函数的第二个参数之后就是子项
+			有几个子项对应得参数就有几个.
+			eg:
+				var str = 'a1ca2ca3cabca555c'; //1,2,3
+				str.replace(/a(((\d))+)c/g,function($0,$1,$2,$3,$4,$5,$6){
+					console.log($1);
+				});
+					注:$1-$3为子项
+					 $4-$6(索引/整个字符串/undefined)
+				没子项函数中的第二个参数为索引，如果有第二个参数为子项，当没有子项的时候依次为（索引、整个字符串、undefined）。
+				找子项可以从左往右找.
+		3.()子项,提权
+		4.中文的区间范围
+			[\u4e00-\u9fa5]
+		5.^:开头
+			[^]:排除
+		</script>
+	</body>
+</html>
